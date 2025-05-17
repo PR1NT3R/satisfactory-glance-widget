@@ -1,0 +1,59 @@
+- name: Satisfactory
+  columns:
+    - size: full
+      widgets:
+      - type: custom-api
+        title: Satisfactory
+        url: ${SATISFACTORY_WIDGET_URL}
+        cache: 10s
+        template: |
+          <meta http-equiv="refresh" content="30">
+          <div style="display:flex; align-items:flex-start; gap:12px;">
+            <!-- Picture on the left -->
+            <div style="width:64px; height:64px; flex-shrink:0; border-radius:4px; display:flex; justify-content:center; align-items:center; overflow:hidden;">
+              <img src="${SATISFACTORY_WIDGET_IMAGE_URL}" width="64" height="64" style="object-fit:contain;">
+            </div>
+            <!-- Content on the right -->
+            <div style="flex-grow:1; min-width:0;">
+              <a class="size-h4 block text-truncate">
+                Satisfactory
+                {{ if .JSON.Bool "healthy" }}
+                <span
+                  style="width: 8px; height: 8px; border-radius: 50%; background-color: #a6da95; display: inline-block; vertical-align: middle;"
+                  data-popover-type="text"
+                  data-popover-text="Healthy"
+                ></span>
+                {{ else }}
+                <span
+                  style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-negative); display: inline-block; vertical-align: middle;"
+                  data-popover-type="text"
+                  data-popover-text="Unhealthy"
+                ></span>
+                {{ end }}
+              </a>
+              <ul class="list-horizontal-text">
+                <li>
+                  <p style="display:inline-flex; align-items:center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="height:1em; vertical-align:middle; margin-right:0.5em;">
+                      <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                    </svg>
+                    Players: {{ .JSON.String "players" }}
+                  </p>
+                </li>
+              </ul>
+              <p style="margin-top:4px; display:flex; align-items:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="height:1em; vertical-align:middle; margin-right:0.5em;">
+                  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clip-rule="evenodd" />
+                </svg>
+                <span {{ if .JSON.Bool "paused" }}style="color: #e8b37d;"{{ else }}{{ end }}>
+                  Save Time: {{ .JSON.String "hours_on_save" }}
+                </span>
+              </p>
+              <p style="margin-top:4px; display:flex; align-items:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="height:1em; vertical-align:middle; margin-right:0.5em;">
+                  <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                </svg>
+                Phase: {{ .JSON.String "phase" }}, Mil: {{ .JSON.String "milestone" }}
+              </p>
+            </div>
+          </div>

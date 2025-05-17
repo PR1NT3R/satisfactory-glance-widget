@@ -1,0 +1,4 @@
+dotenv==0.9.9
+Flask==3.1.0
+pyfactorybridge==1.0.1
+python-dotenv==1.1.0
