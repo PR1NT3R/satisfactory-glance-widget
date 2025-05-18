@@ -1,5 +1,5 @@
 > [!NOTE]
-> I'll probably not add the widget to the [community widgets](https://github.com/glanceapp/community-widgets) repo as I don't see my widget fit in there due to the need of an api middleman. This is a subject to change.
+> I'll probably not add the widget to the [community widgets](https://github.com/glanceapp/community-widgets) repo as I don't see my widget fit in there due to the need of an api middleman, the contributing documentation under that repo says that this repo kindof falls under the "extensions" categoty, but I see no extension widgets in there. This is a subject to change.
 
 # What is this?
 
