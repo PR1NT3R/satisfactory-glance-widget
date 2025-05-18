@@ -6,21 +6,21 @@ This is a simple widget for [glance](https://github.com/glanceapp/glance), for t
 
 Server online with at least a single player joined:
 
-![](https://raw.githubusercontent.com/PR1NT3R/satisfactory-glance-widget/refs/heads/main/readme_images/1.png)
+![](readme_images/1.png)
 <br>
 
 <br>
 
 Server online but no players online, and autopause is on:
 
-![](https://raw.githubusercontent.com/PR1NT3R/satisfactory-glance-widget/refs/heads/main/readme_images/2.png)
+![](readme_images/2.png)
 <br>
 
 <br>
 
 Server is offline:
 
-![](https://raw.githubusercontent.com/PR1NT3R/satisfactory-glance-widget/refs/heads/main/readme_images/3.png)
+![](readme_images/3.png)
 
 <br>
 
