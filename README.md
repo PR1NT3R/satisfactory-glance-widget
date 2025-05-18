@@ -1,3 +1,6 @@
+> [!NOTE]
+> I'll probably not add the widget to the [community widgets](https://github.com/glanceapp/community-widgets) repo as I don't see my widget fit in there due to the need of an api middleman. This is a subject to change.
+
 # What is this?
 
 This is a simple widget for [glance](https://github.com/glanceapp/glance), for those who also host their own satisfactory server, this widget requires a "middleman" to change the game's api output into one that is easier for glance to understand.
