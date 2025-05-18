@@ -9,11 +9,12 @@ import os
 
 app = Flask(__name__)
 
-def get_env(name, default=None, output_type="str", if_none="None"):
+def get_env(name, default=None, output_type="str", if_none="None", ignore_errors=False):
     if os.getenv(name) == None or os.getenv(name) == '':
         if if_none != "None":
-            print(if_none)
-            sys.exit(1)
+            if not ignore_errors:
+                print(if_none)
+                sys.exit(1)
         return default
     else:
         try:
@@ -36,9 +37,14 @@ SATISFACTORY_SERVER_IP = get_env('SATISFACTORY_SERVER_IP', "str", if_none="Pleas
 SATISFACTORY_SERVER_PORT = get_env('SATISFACTORY_SERVER_PORT', "str", if_none="Please specify the server port!")
 
 SATISFACTORY_SERVE_IMAGE_BOOL = get_env('SATISFACTORY_SERVE_IMAGE_BOOL', "false")
+SATISFACTORY_ONLY_SERVE_1_IMAGE_PATH = get_env('SATISFACTORY_ONLY_SERVE_1_IMAGE_PATH', "true")
+if SATISFACTORY_ONLY_SERVE_1_IMAGE_PATH.lower() == "true":
+    SATISFACTORY_ONLY_SERVE_1_IMAGE_PATH = True
+else:
+    SATISFACTORY_ONLY_SERVE_1_IMAGE_PATH = False
 if SATISFACTORY_SERVE_IMAGE_BOOL.lower() == "true":
-    SATISFACTORY_WINDOWS_IMAGE_PATH = get_env('SATISFACTORY_WINDOWS_IMAGE_PATH', if_none="Please specify a windows image path!")
-    SATISFACTORY_LINUX_IMAGE_PATH = get_env('SATISFACTORY_LINUX_IMAGE_PATH', if_none="Please specify a linux/macos image path!")
+    SATISFACTORY_WINDOWS_IMAGE_PATH = get_env('SATISFACTORY_WINDOWS_IMAGE_PATH', if_none="Please specify a windows image path!", ignore_errors=SATISFACTORY_ONLY_SERVE_1_IMAGE_PATH)
+    SATISFACTORY_LINUX_IMAGE_PATH = get_env('SATISFACTORY_LINUX_IMAGE_PATH', if_none="Please specify a linux/macos image path!", ignore_errors=SATISFACTORY_ONLY_SERVE_1_IMAGE_PATH)
 
 SATISFACTORY_CHECK_SERVER_TIMEOUT = get_env('SATISFACTORY_CHECK_SERVER_TIMEOUT', output_type="int")
 SATISFACTORY_IMAGE_URL_ENDPOINT = get_env('SATISFACTORY_IMAGE_URL_ENDPOINT', "/image")
