@@ -4,36 +4,45 @@ from dotenv import load_dotenv
 import pyfactorybridge
 import platform
 import socket
+import sys
 import os
 
 app = Flask(__name__)
 
-SATISFACTORY_ENV_FILE_PATH = None
+def get_env(name, default=None, output_type="str", if_none="None"):
+    if os.getenv(name) == None or os.getenv(name) == '':
+        if if_none != "None":
+            print(if_none)
+            sys.exit(1)
+        return default
+    else:
+        try:
+            if output_type == "str":
+                return str(os.getenv(name))
+            else:
+                return int(os.getenv(name))
+        except:
+            return os.getenv(name)
 
+
+SATISFACTORY_ENV_FILE_PATH = None
 if SATISFACTORY_ENV_FILE_PATH == None or SATISFACTORY_ENV_FILE_PATH == '':
     load_dotenv()
 else:
     load_dotenv(SATISFACTORY_ENV_FILE_PATH)
 
-SATISFACTORY_SERVER_TOKEN = os.getenv('SATISFACTORY_TOKEN')
-SATISFACTORY_SERVER_IP = os.getenv('SATISFACTORY_IP')
-SATISFACTORY_SERVER_PORT = os.getenv('SATISFACTORY_PORT')
+SATISFACTORY_SERVER_TOKEN = get_env('SATISFACTORY_SERVER_TOKEN', "str", if_none="Please specify the server token!")
+SATISFACTORY_SERVER_IP = get_env('SATISFACTORY_SERVER_IP', "str", if_none="Please specify the server ip!")
+SATISFACTORY_SERVER_PORT = get_env('SATISFACTORY_SERVER_PORT', "str", if_none="Please specify the server port!")
 
-SATISFACTORY_WINDOWS_IMAGE_PATH = str(os.getenv('WINDOWS_IMAGE_PATH'))
-SATISFACTORY_LINUX_IMAGE_PATH = str(os.getenv('LINUX_IMAGE_PATH'))
+SATISFACTORY_SERVE_IMAGE_BOOL = get_env('SATISFACTORY_SERVE_IMAGE_BOOL', "false")
+if SATISFACTORY_SERVE_IMAGE_BOOL.lower() == "true":
+    SATISFACTORY_WINDOWS_IMAGE_PATH = get_env('SATISFACTORY_WINDOWS_IMAGE_PATH', if_none="Please specify a windows image path!")
+    SATISFACTORY_LINUX_IMAGE_PATH = get_env('SATISFACTORY_LINUX_IMAGE_PATH', if_none="Please specify a linux/macos image path!")
 
-try:
-    SATISFACTORY_CHECK_SERVER_TIMEOUT = int(os.getenv('CHECK_SERVER_TIMEOUT'))
-except:
-    SATISFACTORY_CHECK_SERVER_TIMEOUT = None
-
-SATISFACTORY_IMAGE_URL_ENDPOINT = str(os.getenv('IMAGE_URL_ENDPOINT'))
-SATISFACTORY_PARSED_API_URL_ENDPOINT = str(os.getenv('PARSED_API_URL_ENDPOINT'))
-
-if SATISFACTORY_IMAGE_URL_ENDPOINT == None or SATISFACTORY_IMAGE_URL_ENDPOINT == '':
-    SATISFACTORY_IMAGE_URL_ENDPOINT = "/image"
-if SATISFACTORY_PARSED_API_URL_ENDPOINT == None or SATISFACTORY_PARSED_API_URL_ENDPOINT == '':
-    SATISFACTORY_PARSED_API_URL_ENDPOINT = "/"
+SATISFACTORY_CHECK_SERVER_TIMEOUT = get_env('SATISFACTORY_CHECK_SERVER_TIMEOUT', output_type="int")
+SATISFACTORY_IMAGE_URL_ENDPOINT = get_env('SATISFACTORY_IMAGE_URL_ENDPOINT', "/image")
+SATISFACTORY_PARSED_API_URL_ENDPOINT = get_env('SATISFACTORY_PARSED_API_URL_ENDPOINT', "/")
 
 def is_server_reachable(host, port, timeout=1):
     """Check if the server is reachable by attempting a socket connection"""
@@ -112,28 +121,23 @@ def index():
 
 @app.route(SATISFACTORY_IMAGE_URL_ENDPOINT)
 def serve_image():
-    # Determine the correct file path for the image, this is because I sometimes like to debug on my windows machine and run "in produciton" on my linux machine
-    if platform.system() == 'Windows':
-        image_path = SATISFACTORY_WINDOWS_IMAGE_PATH
-    else:  # POSIX
-        image_path = SATISFACTORY_LINUX_IMAGE_PATH
-    
-    # Check if the image is present at the specified file path
-    if os.path.isfile(image_path):
-        return send_file(image_path, mimetype='image/jpeg')
+    if SATISFACTORY_SERVE_IMAGE_BOOL.lower() == "true":
+        # Determine the correct file path for the image, this is because I sometimes like to debug on my windows machine and run "in produciton" on my linux machine
+        if platform.system() == 'Windows':
+            image_path = SATISFACTORY_WINDOWS_IMAGE_PATH
+        else:  # POSIX
+            image_path = SATISFACTORY_LINUX_IMAGE_PATH
+        
+        # Check if the image is present at the specified file path
+        if os.path.isfile(image_path):
+            return send_file(image_path, mimetype='image/jpeg')
+        else:
+            return f"Error: Image not found at {image_path}", 404
     else:
-        return f"Error: Image not found at {image_path}", 404
+        return "Warning: image serving is disabled", 404
 
 if __name__ == "__main__":
-    
-    if os.getenv('SATISFACTORY_BIND_IP') == None or os.getenv('SATISFACTORY_BIND_IP') == '':
-        SATISFACTORY_BIND_IP = "0.0.0.0"
-    else:
-        SATISFACTORY_BIND_IP = str(os.getenv('SATISFACTORY_BIND_IP'))
-
-    if os.getenv('SATISFACTORY_BIND_PORT') == None or  os.getenv('SATISFACTORY_BIND_PORT') == '':
-        SATISFACTORY_BIND_PORT = 6052
-    else:
-        SATISFACTORY_BIND_PORT = int(os.getenv('SATISFACTORY_BIND_PORT'))
+    SATISFACTORY_BIND_IP = get_env('SATISFACTORY_BIND_IP', "0.0.0.0")
+    SATISFACTORY_BIND_PORT = get_env('SATISFACTORY_BIND_PORT', 6052, "int")
     
     app.run(host=SATISFACTORY_BIND_IP, port=SATISFACTORY_BIND_PORT, debug=True)
