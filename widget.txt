@@ -1,13 +1,9 @@
-- name: Satisfactory
-  columns:
-    - size: full
-      widgets:
       - type: custom-api
         title: Satisfactory
         url: ${SATISFACTORY_WIDGET_URL}
-        cache: 10s
+        cache: ${SATISFACTORY_WIDGET_CACHE_TIME_IN_SECONDS}s
         template: |
-          <meta http-equiv="refresh" content="30">
+          <meta http-equiv="refresh" content="${SATISFACTORY_WIDGET_REFRESH_TIME_IN_SECONDS}s">
           <div style="display:flex; align-items:flex-start; gap:12px;">
             <!-- Picture on the left -->
             <div style="width:64px; height:64px; flex-shrink:0; border-radius:4px; display:flex; justify-content:center; align-items:center; overflow:hidden;">
